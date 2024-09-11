@@ -1,5 +1,5 @@
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
 
 export function CreateInvoice() {
   return (
@@ -10,10 +10,13 @@ export function CreateInvoice() {
       <span className="hidden md:block">Create Invoice</span>{' '}
       <PlusIcon className="h-5 md:ml-4" />
     </Link>
-  );
+  )
 }
 
 export function UpdateInvoice({ id }: { id: string }) {
+  const x = id
+  x.at(0) // Delete this line
+
   return (
     <Link
       href="/dashboard/invoices"
@@ -21,10 +24,13 @@ export function UpdateInvoice({ id }: { id: string }) {
     >
       <PencilIcon className="w-5" />
     </Link>
-  );
+  )
 }
 
 export function DeleteInvoice({ id }: { id: string }) {
+  const x = id
+  x.at(0) // Delete this line
+
   return (
     <>
       <button className="rounded-md border p-2 hover:bg-gray-100">
@@ -32,5 +38,5 @@ export function DeleteInvoice({ id }: { id: string }) {
         <TrashIcon className="w-5" />
       </button>
     </>
-  );
+  )
 }
