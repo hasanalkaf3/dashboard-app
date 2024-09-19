@@ -10,7 +10,7 @@ import {
 } from './definitions'
 import { formatCurrency } from './utils'
 
-export async function fetchRevenue() {
+export async function fetchRevenue(): Promise<Revenue[]> {
   try {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
@@ -29,7 +29,15 @@ export async function fetchRevenue() {
   }
 }
 
-export async function fetchLatestInvoices() {
+export async function fetchLatestInvoices(): Promise<
+  Array<{
+    amount: string
+    id: string
+    name: string
+    image_url: string
+    email: string
+  }>
+> {
   try {
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
@@ -49,7 +57,12 @@ export async function fetchLatestInvoices() {
   }
 }
 
-export async function fetchCardData() {
+export async function fetchCardData(): Promise<{
+  numberOfCustomers: number
+  numberOfInvoices: number
+  totalPaidInvoices: string
+  totalPendingInvoices: string
+}> {
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
@@ -84,11 +97,11 @@ export async function fetchCardData() {
   }
 }
 
-const ITEMS_PER_PAGE = 6
+const ITEMS_PER_PAGE: number = 6
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number
-) {
+): Promise<InvoicesTable[]> {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE
 
   try {
@@ -120,7 +133,7 @@ export async function fetchFilteredInvoices(
   }
 }
 
-export async function fetchInvoicesPages(query: string) {
+export async function fetchInvoicesPages(query: string): Promise<number> {
   try {
     const count = await sql`SELECT COUNT(*)
     FROM invoices
@@ -141,7 +154,12 @@ export async function fetchInvoicesPages(query: string) {
   }
 }
 
-export async function fetchInvoiceById(id: string) {
+export async function fetchInvoiceById(id: string): Promise<{
+  amount: number
+  id: string
+  customer_id: string
+  status: 'pending' | 'paid'
+}> {
   try {
     const data = await sql<InvoiceForm>`
       SELECT
@@ -166,7 +184,7 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
-export async function fetchCustomers() {
+export async function fetchCustomers(): Promise<CustomerField[]> {
   try {
     const data = await sql<CustomerField>`
       SELECT
@@ -184,7 +202,17 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchFilteredCustomers(query: string): Promise<
+  Array<{
+    total_pending: string
+    total_paid: string
+    id: string
+    name: string
+    email: string
+    image_url: string
+    total_invoices: number
+  }>
+> {
   try {
     const data = await sql<CustomersTableType>`
 		SELECT
